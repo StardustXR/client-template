@@ -1,5 +1,8 @@
+mod root;
+
 use manifest_dir_macros::directory_relative_path;
-use stardust_xr_fusion::client::Client;
+use root::ClientRoot;
+use stardust_xr_fusion::{client::Client, node::NodeType, root::RootAspect};
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() {
@@ -9,7 +12,11 @@ async fn main() {
 		.set_base_prefixes(&[directory_relative_path!("res")])
 		.unwrap();
 
-	// let _wrapped = client.wrap_root(Phobetor::new(&client).await?)?;
+	let _wrapped = client
+		.get_root()
+		.alias()
+		.wrap(ClientRoot::new(&client).await.unwrap())
+		.unwrap();
 
 	tokio::select! {
 		_ = tokio::signal::ctrl_c() => (),
