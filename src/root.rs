@@ -12,7 +12,7 @@ use std::sync::Arc;
 
 pub struct ClientRoot {
 	grabbable: Grabbable,
-	field: Field,
+	_field: Field,
 	_model: Model,
 }
 impl ClientRoot {
@@ -40,7 +40,7 @@ impl ClientRoot {
 
 		Ok(Self {
 			grabbable,
-			field,
+			_field: field,
 			_model: model,
 		})
 	}
