@@ -4,16 +4,14 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-color-eyre = "0.6.2"
-glam = "0.25.0"
-manifest-dir-macros = "0.1.18"
-mint = "0.5.9"
-tokio = { version = "1.32.0", features = ["rt", "tokio-macros", "sync"] }
+glam = "*"
+serde = { version = "1.0.219", features = ["derive"] }
+tokio = { version = "*", features = ["rt", "tokio-macros", "sync"] }
 
 [dependencies.stardust-xr-fusion]
 git = "https://github.com/StardustXR/core.git"
 branch = "dev"
 
-[dependencies.stardust-xr-molecules]
-git = "https://github.com/StardustXR/molecules.git"
+[dependencies.asteroids]
+git = "https://github.com/StardustXR/asteroids.git"
 branch = "dev"

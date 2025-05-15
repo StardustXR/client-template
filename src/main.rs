@@ -1,25 +1,26 @@
-mod root;
-
-use manifest_dir_macros::directory_relative_path;
-use root::ClientRoot;
-use stardust_xr_fusion::{client::Client, node::NodeType, root::RootAspect};
+use asteroids::{
+	elements::{shape, Lines, Spatial},
+	ClientState, ElementTrait, Migrate,
+};
+use serde::{Deserialize, Serialize};
+use stardust_xr_fusion::{fields::Shape, project_local_resources};
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() {
-	color_eyre::install().unwrap();
-	let (client, event_loop) = Client::connect_with_async_loop().await.unwrap();
-	client
-		.set_base_prefixes(&[directory_relative_path!("res")])
-		.unwrap();
+	asteroids::client::run::<State>(&[&project_local_resources!("res")]).await
+}
 
-	let _wrapped = client
-		.get_root()
-		.alias()
-		.wrap(ClientRoot::new(&client).await.unwrap())
-		.unwrap();
+#[derive(Default, Debug, Serialize, Deserialize)]
+pub struct State {}
+impl Migrate for State {
+	type Old = Self;
+}
+impl ClientState for State {
+	const QUALIFIER: &'static str = "org";
+	const ORGANIZATION: &'static str = "example";
+	const NAME: &'static str = "asteroids_test";
 
-	tokio::select! {
-		_ = tokio::signal::ctrl_c() => (),
-		e = event_loop => e.unwrap().unwrap(),
+	fn reify(&self) -> asteroids::Element<Self> {
+		Lines::new(shape(Shape::Box([0.1; 3].into()))).build()
 	}
 }
