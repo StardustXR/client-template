@@ -48,7 +48,7 @@ impl Reify for State {
 			// Creates Grabbable ring underneath box
 			state.grab_pos = pos.into();
 		})
-		.radius(self.cube_edge_length.hypot(self.cube_edge_length) / 2.0 + 0.01) // Defines radius of grab ring
+		.radius(self.cube_edge_length.hypot(self.cube_edge_length) / 2.0 + 0.025) // Defines radius of grab ring
 		.build()
 		.child(
 			// Cube lines
