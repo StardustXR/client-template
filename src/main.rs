@@ -1,6 +1,6 @@
 use std::f32::consts::FRAC_PI_2;
 
-use asteroids::{
+use stardust_xr_asteroids::{
 	elements::{shape, Dial, GrabRing, Lines},
 	ClientState, CustomElement, Migrate, Reify, Transformable,
 };
@@ -10,7 +10,7 @@ use stardust_xr_fusion::{fields::Shape, project_local_resources};
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() {
-	asteroids::client::run::<State>(&[&project_local_resources!("res")]).await
+	stardust_xr_asteroids::client::run::<State>(&[&project_local_resources!("res")]).await
 }
 
 #[derive(Debug, Serialize, Deserialize)] // Defining variables used in client
@@ -36,14 +36,14 @@ impl Migrate for State {
 impl ClientState for State {
 	const APP_ID: &'static str = "org.example.client_template";
 
-	fn on_frame(&mut self, _info: &stardust_xr_fusion::root::FrameInfo) {
-		self.time += _info.delta;
+	fn on_frame(&mut self, info: &stardust_xr_fusion::root::FrameInfo) {
+		self.time += info.delta;
 	} // scale before identical scale to when it reloads
 }
 impl Reify for State {
 	// Example: Cube with grab ring on the bottom (allows user to move it)
 	// and a dial on the top that allows the user to change the size of the box
-	fn reify(&self) -> impl asteroids::Element<Self> {
+	fn reify(&self) -> impl stardust_xr_asteroids::Element<Self> {
 		GrabRing::new(self.grab_pos, |state: &mut Self, pos| {
 			// Creates Grabbable ring underneath box
 			state.grab_pos = pos.into();

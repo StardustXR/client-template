@@ -12,6 +12,6 @@ tokio = { version = "*", features = ["rt", "tokio-macros", "sync"] }
 git = "https://github.com/StardustXR/core.git"
 branch = "dev"
 
-[dependencies.asteroids]
+[dependencies.stardust-xr-asteroids]
 git = "https://github.com/StardustXR/asteroids.git"
 branch = "dev"
