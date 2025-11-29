@@ -1,17 +1,19 @@
 [package]
 name = "client-template"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
 glam = { version = "*", features = ["serde"] }
 serde = { version = "1.0.219", features = ["derive"] }
 tokio = { version = "*", features = ["rt", "tokio-macros", "sync"] }
+stardust-xr-fusion = "0.50.0"
+stardust-xr-asteroids = "0.50.0"
 
-[dependencies.stardust-xr-fusion]
-git = "https://github.com/StardustXR/core.git"
-branch = "dev"
+# [dependencies.stardust-xr-fusion]
+# git = "https://github.com/StardustXR/core.git"
+# branch = "dev"
 
-[dependencies.stardust-xr-asteroids]
-git = "https://github.com/StardustXR/asteroids.git"
-branch = "dev"
+# [dependencies.stardust-xr-asteroids]
+# git = "https://github.com/StardustXR/asteroids.git"
+# branch = "dev"
