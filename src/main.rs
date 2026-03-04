@@ -1,11 +1,11 @@
 use std::f32::consts::FRAC_PI_2;
 
-use stardust_xr_asteroids::{
-	elements::{shape, Dial, GrabRing, Lines},
-	ClientState, CustomElement, Migrate, Reify, Transformable,
-};
 use glam::{Quat, Vec3};
 use serde::{Deserialize, Serialize};
+use stardust_xr_asteroids::{
+	ClientState, Context, CustomElement, Migrate, Reify, Tasker, Transformable,
+	elements::{Dial, GrabRing, Lines, shape},
+};
 use stardust_xr_fusion::{fields::Shape, project_local_resources};
 
 #[tokio::main(flavor = "current_thread")]
@@ -43,7 +43,11 @@ impl ClientState for State {
 impl Reify for State {
 	// Example: Cube with grab ring on the bottom (allows user to move it)
 	// and a dial on the top that allows the user to change the size of the box
-	fn reify(&self) -> impl stardust_xr_asteroids::Element<Self> {
+	fn reify(
+		&self,
+		_context: &Context,
+		_tasks: impl Tasker<Self>,
+	) -> impl stardust_xr_asteroids::Element<Self> {
 		GrabRing::new(self.grab_pos, |state: &mut Self, pos| {
 			// Creates Grabbable ring underneath box
 			state.grab_pos = pos.into();
@@ -59,7 +63,7 @@ impl Reify for State {
 					// Dial
 					Dial::create(self.cube_edge_length, |state: &mut Self, value: f32| {
 						state.cube_edge_length = value.clamp(0.05, 0.9); // Restrict size between 0.05 &
-						                               // 0.9 meters
+						// 0.9 meters
 					})
 					.turn_unit_amount(0.2) // Defines how much 1 rotation will add or subtract from cube_edge_length
 					.radius(0.05) // Defines the radius of the dial
