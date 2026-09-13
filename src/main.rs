@@ -6,11 +6,13 @@ use stardust_xr_asteroids::{
 	ClientState, Context, CustomElement, Migrate, Reify, Tasker, Transformable,
 	elements::{Dial, GrabRing, Lines, shape},
 };
-use stardust_xr_fusion::{fields::Shape, project_local_resources};
+use stardust_xr_fusion::{client::FrameInfo, fields::Shape, project_local_resources};
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() {
-	stardust_xr_asteroids::client::run::<State>(&[&project_local_resources!("res")]).await
+	stardust_xr_asteroids::client::run::<State>(&[&project_local_resources!("res")])
+		.await
+		.unwrap();
 }
 
 #[derive(Debug, Serialize, Deserialize)] // Defining variables used in client
@@ -36,7 +38,7 @@ impl Migrate for State {
 impl ClientState for State {
 	const APP_ID: &'static str = "org.example.client_template";
 
-	fn on_frame(&mut self, info: &stardust_xr_fusion::root::FrameInfo) {
+	fn on_frame(&mut self, info: &FrameInfo) {
 		self.time += info.delta;
 	} // scale before identical scale to when it reloads
 }
@@ -56,22 +58,24 @@ impl Reify for State {
 		.build()
 		.child(
 			// Cube lines
-			Lines::new(shape(Shape::Box([self.cube_edge_length; 3].into()))) // Creates box outline size
-				.pos([0.0, self.cube_edge_length / 2.0, 0.0]) // Updates position of box
-				.build()
-				.child(
-					// Dial
-					Dial::create(self.cube_edge_length, |state: &mut Self, value: f32| {
-						state.cube_edge_length = value.clamp(0.05, 0.9); // Restrict size between 0.05 &
-						// 0.9 meters
-					})
-					.turn_unit_amount(0.2) // Defines how much 1 rotation will add or subtract from cube_edge_length
-					.radius(0.05) // Defines the radius of the dial
-					.thickness(0.04) // Defines the thickness of the dial
-					.pos([0.0, self.cube_edge_length / 2.0, 0.0]) // Sets position of rotation of dial (on to of the cube)
-					.rot(Quat::from_rotation_x(-FRAC_PI_2)) // Sets orientation to correct plane
-					.build(), // Builds the object
-				),
+			Lines::new(shape(Shape::Box {
+				size: [self.cube_edge_length; 3].into(),
+			})) // Creates box outline size
+			.pos([0.0, self.cube_edge_length / 2.0, 0.0]) // Updates position of box
+			.build()
+			.child(
+				// Dial
+				Dial::create(self.cube_edge_length, |state: &mut Self, value: f32| {
+					state.cube_edge_length = value.clamp(0.05, 0.9); // Restrict size between 0.05 &
+					// 0.9 meters
+				})
+				.turn_unit_amount(0.2) // Defines how much 1 rotation will add or subtract from cube_edge_length
+				.radius(0.05) // Defines the radius of the dial
+				.thickness(0.04) // Defines the thickness of the dial
+				.pos([0.0, self.cube_edge_length / 2.0, 0.0]) // Sets position of rotation of dial (on to of the cube)
+				.rot(Quat::from_rotation_x(-FRAC_PI_2)) // Sets orientation to correct plane
+				.build(), // Builds the object
+			),
 		) // Makes the box become a child of the ring
 	}
 }
